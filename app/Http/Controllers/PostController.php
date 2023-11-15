@@ -177,4 +177,30 @@ class PostController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
+
+    public function like(Post $post)
+    {
+        $liker = auth()->user(); // Liker in this case is the logged in user
+
+        foreach ($liker->likes as $likeCombination) {
+
+            if ($likeCombination->pivot->post_id == $post->id) {
+
+                return response()->json(['message' => 'This post is liked alredy!']);
+            }
+        }
+
+        $liker->likes()->attach($post->id);
+
+        return response()->json(['message' => 'The post ' . $post->id . ' is liked by ' . $liker->name], 200);
+    }
+
+    public function dislike(Post $post)
+    {
+        $liker = auth()->user();
+
+        $liker->likes()->detach($post->id);
+
+        return response()->json(['message' => 'The post ' . $post->id . ' is disliked by ' . $liker->name], 200);
+    }
 }

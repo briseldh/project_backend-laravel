@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
             $table->index('post_id');
 
+            $table->unique(['user_id', 'post_id']);
             $table->comment('The table of all likes of all posts by different users.');
         });
     }

@@ -45,6 +45,8 @@ Route::middleware('auth:web')->group(function () {
         Route::get('/post/getById/{id}', 'getById');
         Route::get('/post/getAll', 'getAll');
         Route::post('/uploadFile/{postId}', 'uploadFile');
+        Route::post('/post/{post}/like', 'like');
+        Route::post('/post/{post}/dislike', 'dislike');
     });
 
     Route::controller(CommentController::class)->group(function () {
