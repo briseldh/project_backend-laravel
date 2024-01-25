@@ -47,9 +47,10 @@ class PostPolicy
             Response::deny('PostPolicy - getById - denied');
     }
 
-    public function getAll(User $user)
+    public function getAll()
     {
-        return Response::deny('PostPolicy - getAll - denied');
+        return Response::allow('PostPolicy - getAll - allowed');
+        // return $user->id !== null ? Response::allow('PostPolicy - getAll - allowed') : Response::deny('PostPolicy - getAll - denied');
     }
 
     public function uploadFile(User $user, Post $post)

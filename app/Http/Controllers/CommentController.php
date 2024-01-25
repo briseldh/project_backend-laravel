@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Post;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -10,17 +11,18 @@ use Illuminate\Support\Facades\Validator;
 
 class CommentController extends Controller
 {
-    public function insert(Request $request)
+    public function insert(Request $request, string $id)
     {
         try {
+            $post = Post::find($id);
 
             $policyResp = Gate::inspect('insert', Comment::class);
 
             if ($policyResp->allowed()) {
 
                 $rules = [
-                    'user_id' => 'required|numeric',
-                    'post_id' => 'required|numeric',
+                    // 'user_id' => 'required|numeric', // Needed only for Postman
+                    // 'post_id' => 'required|numeric',
                     'text' => 'required|max:255',
                 ];
 
@@ -31,8 +33,8 @@ class CommentController extends Controller
                 }
 
                 $comment = new Comment();
-                $comment->user_id = $request->input('user_id');
-                $comment->post_id = $request->input('post_id');
+                $comment->user_id = $request->user()->id; // For Postman -> $request->input('user_id');
+                $comment->post_id = $post->id; // For Postman -> $request->input('post_id');
                 $comment->text = $request->input('text');
 
                 $comment->save();

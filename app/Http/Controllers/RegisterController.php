@@ -12,21 +12,24 @@ class RegisterController extends Controller
     public function __invoke(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'string', 'min:5', 'max:32'],
+            'username' => ['required', 'string', 'min:5', 'max:32'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string']
         ]);
 
         $user = User::create([
-            'name' => $request->input('name'),
+            'name' => $request->input('username'),
             'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password'))
+            'password' => Hash::make($request->input('password')),
+            // 'role' => "user"
         ]);
 
+        // TODO:
+        // Find a way to refresh the registrated user before logging him in.
 
         Auth::login($user);
         $request->session()->regenerate();
 
-        return response()->json(['message' => 'Register successful', 'user' => $user], 201);
+        return response()->json(['message' => 'Register successful', 'userData' => $user], 201);
     }
 }
