@@ -8,6 +8,7 @@ use App\Models\Post;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -215,7 +216,7 @@ class PostController extends Controller
         }
     }
 
-    public function getAll()
+    public function getAll(Request $request)
     {
         // try {
         //     $policyResp = Gate::inspect('getAll', Post::class);
@@ -236,6 +237,7 @@ class PostController extends Controller
         // $files = $fileUpload->all();
         $posts = Post::with('file', 'comments')->get();
         $comments = Comment::with('user')->get();
+        // $likes = DB::select('select * from project_backend.post_likes where user_id = :userId', ['userId' => $request->user()->id]);
 
         return response()->json(['posts' => $posts, 'comments' => $comments], 200);
     }
@@ -283,74 +285,4 @@ class PostController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
-
-    public function like(Post $post)
-    {
-        $liker = auth()->user(); // Liker in this case is the logged in user
-
-        foreach ($liker->likes as $likeCombination) {
-
-            if ($likeCombination->pivot->post_id == $post->id) {
-
-                return response()->json(['message' => 'This post is liked alredy!']);
-            }
-        }
-
-        $liker->likes()->attach($post->id);
-
-        return response()->json(['message' => 'The post ' . $post->id . ' is liked by ' . $liker->name], 200);
-    }
-
-    public function dislike(Post $post)
-    {
-        $liker = auth()->user();
-
-        $liker->likes()->detach($post->id);
-
-        return response()->json(['message' => 'The post ' . $post->id . ' is disliked by ' . $liker->name], 200);
-    }
-
-    // public function uploadFile(Request $request, $postId)
-    // {
-    //     try {
-
-    //         $file = $request->file('avatar');
-    //         $post = Post::findOrFail($postId);
-    //         // if ($post->id !== $postId) {
-    //         //     return response()->json('post not found');
-    //         // }
-
-
-    //         $policyResp = Gate::inspect('uploadFile', $post);
-
-    //         if ($policyResp->allowed()) {
-
-    //             //-File Validation
-    //             $request->validate([
-    //                 'avatar' => ['required', 'mimes:jpg,pdf', 'max:2048']
-    //             ]);
-
-    //             $fileName = date('Y-m-d') . '_' . time() . $file->getClientOriginalName();
-    //             $path = 'uploads/' . $fileName;
-    //             $onlyName = explode('.', $file->getClientOriginalName());
-
-    //             $post_images = new FileUpload();
-
-    //             $post_images->post_id = $post->id;
-    //             $post_images->path = $path;
-    //             $post_images->alt_text = $onlyName[0];
-    //             $post_images->uploaded_at = date('Y-m-d H:i:s');
-
-    //             $post_images->save();
-
-    //             Storage::putFileAs('uploads', $file, $fileName);
-
-    //             return response()->json(['message' => 'File uploaded successfully.'], 200);
-    //         }
-
-    //         return response()->json(['message' => $policyResp->message()], 403);
-    //     } catch (Exception $e) {
-    //         return response()->json(['message' => $e->getMessage()], 500);
-    //     }
-    // }
 }

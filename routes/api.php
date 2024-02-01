@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GetDataController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\PostController;
@@ -27,7 +28,6 @@ use Illuminate\Support\Facades\Route;
 
 
 //=================Public Routes=================//
-
 Route::post('/register', RegisterController::class);
 Route::post('/login', LoginController::class);
 Route::post('/logout', LogoutController::class);
@@ -50,9 +50,9 @@ Route::middleware('auth:web')->group(function () {
         Route::delete('/post/delete/{id}', 'delete');
         Route::get('/post/getById/{id}', 'getById');
         // Route::get('/post/getAll', 'getAll');
-        Route::post('/post/uploadFile/{postId}', 'uploadFile');
-        Route::post('/post/{post}/like', 'like');
-        Route::post('/post/{post}/dislike', 'dislike');
+        // Route::post('/post/uploadFile/{postId}', 'uploadFile');
+        // Route::post('/post/{post}/like', 'like');
+        // Route::post('/post/{post}/dislike', 'dislike');
     });
 
     Route::controller(CommentController::class)->group(function () {
@@ -61,6 +61,13 @@ Route::middleware('auth:web')->group(function () {
         Route::patch('/comment/update/{id}', 'update');
         Route::delete('/comment/delete/{id}', 'delete');
         Route::get('/comment/getById/{id}', 'getById');
+    });
+
+    Route::controller(LikeController::class)->group(function () {
+        Route::get('/like/getUserLikes', 'getUserLikes');
+        Route::get('/like/getAll', 'getAll');
+        Route::post('/like/{post}', 'like');
+        Route::post('/dislike/{post}', 'dislike');
     });
 });
 
