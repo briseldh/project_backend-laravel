@@ -16,7 +16,7 @@ class LikeController extends Controller
         return response()->json(['likes' => $likes], 200);
     }
 
-    public function getAll(Request $request)
+    public function getLikeCount(Request $request)
     {
         $likes = Like::all()->count();
 

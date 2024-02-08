@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Post;
 use App\Models\User;
-use GuzzleHttp\Psr7\Request;
 use Illuminate\Auth\Access\Response;
 
 class PostPolicy

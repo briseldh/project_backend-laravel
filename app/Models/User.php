@@ -32,6 +32,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Post::class, 'post_likes')->withTimestamps();
     }
 
+    public function profilePic()
+    {
+        return $this->hasOne(ProfilePicUpload::class);
+    }
+
     /**
      * The attributes that are mass assignable.
      *

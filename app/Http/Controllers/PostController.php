@@ -15,40 +15,6 @@ use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
-    // public function insert(Request $request)
-    // {
-    //     try {
-    //         $policyResp = Gate::inspect('insert', Post::class);
-
-    //         if ($policyResp->allowed()) {
-
-    //             $rules = [
-    //                 // 'user_id' => 'required|numeric', // Needed only when using Postman
-    //                 'title' => 'required|min:5|max:50',
-    //                 'text' => 'required|min:10|max:2000',
-    //             ];
-
-    //             $validator = Validator::make($request->all(), $rules);
-
-    //             if ($validator->fails()) {
-    //                 return response()->json(['message' => $validator->errors()], 400);
-    //             }
-
-    //             $post = new Post();
-    //             $post->user_id = $request->user()->id; // For Postman-> $request->input('user_id');
-    //             $post->title = $request->input('title');
-    //             $post->text = $request->input('text');
-
-    //             $post->save();
-
-    //             return response()->json(['message' => $policyResp->message(), 'postData' => $post], 201);
-    //         }
-
-    //         return response()->json(['message' => $policyResp->message()], 403);
-    //     } catch (Exception $e) {
-    //         return response()->json(['message' => '===FATAL=== ' . $e->getMessage()], 500);
-    //     }
-    // }
 
     public function insert(Request $request)
     {
@@ -128,12 +94,12 @@ class PostController extends Controller
                 // }
 
                 //========Mathias Method============//
-                if ($request->hasFile('avatar')) {
-                    $extension = '.' . $request->file('avatar')->extension();
-                    $path = $request->file('avatar')->storeAs('images', 'emer-kot2' . $extension, 'public');
+                // if ($request->hasFile('avatar')) {
+                //     $extension = '.' . $request->file('avatar')->extension();
+                //     $path = $request->file('avatar')->storeAs('images', 'emer-kot2' . $extension, 'public');
 
-                    return response()->json(['message' => "Inserted Successfuly", 'postData' => $post], 201);
-                }
+                //     return response()->json(['message' => "Inserted Successfuly", 'postData' => $post], 201);
+                // }
 
                 //===================UPLOAD=======================================================//
 
@@ -242,47 +208,47 @@ class PostController extends Controller
         return response()->json(['posts' => $posts, 'comments' => $comments], 200);
     }
 
-    public function uploadFile(Request $request, $postId)
-    {
-        try {
+    // public function uploadFile(Request $request, $postId)
+    // {
+    //     try {
 
-            $file = $request->file('avatar');
-            $post = Post::findOrFail($postId);
-            // if ($post->id !== $postId) {
-            //     return response()->json('post not found');
-            // }
+    //         $file = $request->file('avatar');
+    //         $post = Post::findOrFail($postId);
+    //         // if ($post->id !== $postId) {
+    //         //     return response()->json('post not found');
+    //         // }
 
 
-            $policyResp = Gate::inspect('uploadFile', $post);
+    //         $policyResp = Gate::inspect('uploadFile', $post);
 
-            if ($policyResp->allowed()) {
+    //         if ($policyResp->allowed()) {
 
-                //-File Validation
-                $request->validate([
-                    'avatar' => ['required', 'mimes:jpeg,pdf', 'max:2048']
-                ]);
+    //             //-File Validation
+    //             $request->validate([
+    //                 'avatar' => ['required', 'mimes:jpeg,pdf', 'max:2048']
+    //             ]);
 
-                $fileName = date('Y-m-d') . '_' . time() . $file->getClientOriginalName();
-                $path = 'uploads/' . $fileName;
-                $onlyName = explode('.', $file->getClientOriginalName());
+    //             $fileName = date('Y-m-d') . '_' . time() . $file->getClientOriginalName();
+    //             $path = 'uploads/' . $fileName;
+    //             $onlyName = explode('.', $file->getClientOriginalName());
 
-                $post_images = new FileUpload();
+    //             $post_images = new FileUpload();
 
-                $post_images->post_id = $post->id;
-                $post_images->path = $path;
-                $post_images->alt_text = $onlyName[0];
-                $post_images->uploaded_at = date('Y-m-d H:i:s');
+    //             $post_images->post_id = $post->id;
+    //             $post_images->path = $path;
+    //             $post_images->alt_text = $onlyName[0];
+    //             $post_images->uploaded_at = date('Y-m-d H:i:s');
 
-                $post_images->save();
+    //             $post_images->save();
 
-                Storage::putFileAs('uploads', $file, $fileName);
+    //             Storage::putFileAs('uploads', $file, $fileName);
 
-                return response()->json(['message' => 'File uploaded successfully.'], 200);
-            }
+    //             return response()->json(['message' => 'File uploaded successfully.'], 200);
+    //         }
 
-            return response()->json(['message' => $policyResp->message()], 403);
-        } catch (Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
-        }
-    }
+    //         return response()->json(['message' => $policyResp->message()], 403);
+    //     } catch (Exception $e) {
+    //         return response()->json(['message' => $e->getMessage()], 500);
+    //     }
+    // }
 }

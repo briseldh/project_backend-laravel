@@ -6,6 +6,7 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfilePicController;
 use App\Http\Controllers\RegisterController;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -65,9 +66,17 @@ Route::middleware('auth:web')->group(function () {
 
     Route::controller(LikeController::class)->group(function () {
         Route::get('/like/getUserLikes', 'getUserLikes');
-        Route::get('/like/getAll', 'getAll');
+        Route::get('/like/getLikeCount', 'getLikeCount');
         Route::post('/like/{post}', 'like');
         Route::post('/dislike/{post}', 'dislike');
+    });
+
+    Route::controller(ProfilePicController::class)->group(function () {
+        Route::post('/profilePic/insert', 'insert');
+        Route::patch('/profilePic/update/{id}', 'update');
+        Route::delete('profilePic/delete/{id}', 'delete');
+        Route::get('/profilePic/getById/{id}', 'getById');
+        Route::get('/profilePic/getAll', 'getAll');
     });
 });
 
