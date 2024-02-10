@@ -27,6 +27,7 @@ class GetDataController extends Controller
         $user = $request->user();
         $posts = $user->posts;
         $comments = $user->comments;
+        $profilePics = $user->profilePic;
         $uploads = DB::select('select * from project_backend.post_images where user_id = :userId', ['userId' => $request->user()->id]);
 
         // $user = User::with('posts', 'comments')->get();

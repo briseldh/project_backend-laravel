@@ -50,10 +50,6 @@ Route::middleware('auth:web')->group(function () {
         Route::patch('/post/update/{id}', 'update');
         Route::delete('/post/delete/{id}', 'delete');
         Route::get('/post/getById/{id}', 'getById');
-        // Route::get('/post/getAll', 'getAll');
-        // Route::post('/post/uploadFile/{postId}', 'uploadFile');
-        // Route::post('/post/{post}/like', 'like');
-        // Route::post('/post/{post}/dislike', 'dislike');
     });
 
     Route::controller(CommentController::class)->group(function () {
@@ -73,7 +69,7 @@ Route::middleware('auth:web')->group(function () {
 
     Route::controller(ProfilePicController::class)->group(function () {
         Route::post('/profilePic/insert', 'insert');
-        Route::patch('/profilePic/update/{id}', 'update');
+        Route::post('/profilePic/update/{id}', 'update');
         Route::delete('profilePic/delete/{id}', 'delete');
         Route::get('/profilePic/getById/{id}', 'getById');
         Route::get('/profilePic/getAll', 'getAll');

@@ -70,7 +70,11 @@ class ProfilePicController extends Controller
     {
         try {
 
+            // $query = DB::select('select * from project_backend.profile_images where user_id = :userId', ['userId' => $request->user()->id]);
+            // $profilePic = $query[0];
             $profilePic = ProfilePicUpload::find($id);
+
+            // return response()->json(['profilePic' => $profilePic], 404);
 
             if (!$profilePic) {
                 return response()->json(['message' => 'The profile picture that you want to change can not be found'], 404);
